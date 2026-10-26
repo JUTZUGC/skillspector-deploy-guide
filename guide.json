@@ -1,0 +1,107 @@
+{
+  "owner": "JUTZUGC",
+  "code": "JUTZUGC",
+  "project": {
+    "key": "skillspector",
+    "nameCn": "SkillSpector",
+    "repoName": "skillspector-deploy-guide",
+    "oneLiner": "NVIDIA 的 Agent 技能安全扫描器",
+    "officialRepo": "https://github.com/NVIDIA/SkillSpector",
+    "officialDocs": "https://docs.nvidia.com/skills/scanning-agent-skills",
+    "stars": "21.7k",
+    "license": "Apache-2.0",
+    "highlights": [
+      "输入：技能目录、`SKILL.md`、zip 包、GitHub 地址",
+      "输出：JSON / Markdown 报告，适合做安装前门禁",
+      "两种用法：命令行 `skillspector scan`，或 `skillspector mcp` 给 Agent 调用",
+      "背景：NVIDIA Verified Skills 流水线的一部分"
+    ],
+    "mcpSupport": "SkillSpector 支持 `skillspector mcp` 作为 MCP server 暴露扫描能力，安装时要带 `[mcp]` extra。本仓库的 MCP 只提供安装步骤与常见坑。",
+    "webuiUrl": "",
+    "adapterPorts": "",
+    "collectedAt": "2026-10-26",
+    "verification": [
+      [
+        "从 Release wheel 安装成功（v2.13.1），skillspector --help 正常输出",
+        "已验证 2026-10-26"
+      ],
+      [
+        "从源码构建在 Windows 上失败（hatchling Errno 9），已写入坑位",
+        "已验证 2026-10-26"
+      ],
+      [
+        "MCP 模式（[mcp] extra）未实测",
+        "已核对 2026-10-26"
+      ],
+      [
+        "MCP 服务握手与工具列表（initialize / tools/list）",
+        "已验证 2026-10-26"
+      ],
+      [
+        "非目标宿主调用被拦截（HOST_NOT_ALLOWED）",
+        "已验证 2026-10-26"
+      ]
+    ],
+    "deploy": {
+      "type": "script",
+      "requires": [
+        "python"
+      ],
+      "steps": [
+        "python3 -m venv .venv",
+        ".venv/bin/pip install https://github.com/NVIDIA/skillspector/releases/download/v2.13.1/skillspector-2.13.1-py3-none-any.whl",
+        "echo \"安装完成：用 .venv/bin/skillspector scan <技能目录> --no-llm 扫描\""
+      ],
+      "stepsPs": [
+        "python -m venv .venv",
+        ".venv\\Scripts\\python.exe -m pip install https://github.com/NVIDIA/skillspector/releases/download/v2.13.1/skillspector-2.13.1-py3-none-any.whl ; if ($LASTEXITCODE -ne 0) { throw '安装失败，请查看上面的输出' }",
+        "Write-Host '安装完成：用 .venv\\Scripts\\skillspector.exe scan <技能目录> --no-llm 扫描'"
+      ],
+      "source": "https://github.com/NVIDIA/SkillSpector#installation"
+    },
+    "pitfalls": [
+      "不要 `pip install git+...`：Windows 上源码构建实测报 `OSError: [Errno 9] Bad file descriptor`，用 Release 里的 wheel 或 Docker",
+      "命令找不到：装在 `.venv` 里，先激活环境或用全路径",
+      "默认会尝试 LLM 分析：只想快速扫就加 `--no-llm`",
+      "要 `skillspector mcp` 得带 `[mcp]` extra，wheel 版不含",
+      "远程地址和 zip 有大小上限（防 zip bomb），超大技能包会被拒绝",
+      "扫描通过不代表绝对安全，装之前仍要看技能要什么权限"
+    ]
+  },
+  "gate": {
+    "allow": [
+      "dumate"
+    ],
+    "label": "百度搭子",
+    "url": "https://www.dumate.cn/",
+    "guideUrl": "https://github.com/JUTZUGC/skillspector-deploy-guide",
+    "howToFix": [
+      "1. 打开 https://www.dumate.cn/ ，下载并安装「百度搭子」电脑端（Windows / macOS）",
+      "2. 用账号登录",
+      "3. 在对话窗口发送：你好，帮我从 github 部署 JUTZUGC/skillspector-deploy-guide 到我的电脑上",
+      "4. 部署完成后，在同一对话窗口里继续使用"
+    ],
+    "hint": "请改用「百度搭子」部署后再使用；本工具没有网页版入口。",
+    "onError": "allow"
+  },
+  "keywords": [
+    "SkillSpector 安装",
+    "技能 安全扫描",
+    "Agent Skill 安全",
+    "提示注入 检测",
+    "Claude Code 安全",
+    "MCP 安全",
+    "AI 技能 风险",
+    "NVIDIA SkillSpector",
+    "SkillSpector 中文",
+    "skillspector deploy guide"
+  ],
+  "topics": [
+    "security",
+    "ai-agents",
+    "mcp",
+    "skill-scanner",
+    "nvidia",
+    "python"
+  ]
+}
